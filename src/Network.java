@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.LinkedList;
+import java.util.*;
 
 public class Network {
     private ArrayList<LinkedList<Node>> friendGraph;
@@ -13,11 +11,6 @@ public class Network {
             connections.add(new Node(i));
             friendGraph.add(connections);
         }
-    }
-
-    public void addConnection(int userIndex, int friendIndex){
-        LinkedList<Node> connections = friendGraph.get(userIndex);
-        connections.add(friendGraph.get(friendIndex).get(0));
     }
 
     public void displayFriendlist(int userIndex){
@@ -44,4 +37,69 @@ public class Network {
             System.out.println("Invalid input");
         }
     }
+
+    public void addConnection(int userIndex, int friendIndex){
+        LinkedList<Node> connections = friendGraph.get(userIndex);
+        connections.add(friendGraph.get(friendIndex).get(0));
+    }
+
+
+    public void breadthFirstSearch(int userIndex, int userIndex2){
+        Queue<Integer> connections = new LinkedList<>();
+        boolean[] visited = new boolean[friendGraph.size()];
+        int parent[] = new int[friendGraph.size()];
+        Arrays.fill(parent, -1);
+
+        connections.add(userIndex);
+        visited[userIndex] = true;
+
+        boolean found = false;
+
+        while (connections.size() != 0){
+            int current = connections.poll();
+
+            if (current == userIndex2){
+                found = true;
+                break;
+            }
+
+            for (int i = 1; i < friendGraph.get(current).size(); i++){
+                int neighbor = friendGraph.get(current).get(i).getAccNum();
+
+                if (!visited[neighbor]){
+                    visited[neighbor] = true;
+                    parent[neighbor] = current;
+                    connections.add(neighbor);
+                }
+            }
+        }
+
+        if (!found){
+            System.out.println("Cannot find connection between user " + userIndex + " and " + userIndex2);
+            return;
+        }
+
+        LinkedList<Node> pathBackwards = new LinkedList<>();
+        int current = userIndex2;
+
+        while (current != -1){
+            pathBackwards.addFirst(new Node(current));
+
+            if (current == userIndex){
+                break;
+            }
+
+            current = parent[current];
+        }
+
+        for (int i = 0; i < pathBackwards.size() - 1; i++){
+            System.out.println(pathBackwards.get(i).getAccNum() + " is friends with " + pathBackwards.get(i + 1).getAccNum());
+        }
+
+    }
+
+
+
+
+
 }

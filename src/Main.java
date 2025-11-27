@@ -52,6 +52,11 @@ public class Main {
                             System.out.println("Invalid input!\n");
                         }
                     } else if (choice == 2){
+                        System.out.println("Enter ID of Person: ");
+                        int user1 = scan.nextInt();
+                        System.out.println("Enter ID of Friend: ");
+                        int user2 = scan.nextInt();
+                        network.breadthFirstSearch(user1, user2);
 
                     } else if (choice == 3){
                         System.out.println("Exiting...");
